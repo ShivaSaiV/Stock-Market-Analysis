@@ -1,17 +1,17 @@
 import yfinance as yf
-import pandas as pd 
+import pandas as pd
 
-# Load from wikipedia
-wikipedia_link = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
-sp500 = pd.read_html(wikipedia_link)[0]
+# List of companies in S&P500
+sp500_url = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
+tickers = pd.read_html(sp500_url)[0]['Symbol'].str.replace('.', '-', regex=False).tolist()
 
-# Extract symols
-sp500_symbols = sp500["Symbol"].tolist()
-print(len(sp500_symbols))
+# issue: wideformat download
+data = yf.download(tickers, period="10y", auto_adjust=False)
 
-# Get from yfinance
-sp500_data = yf.download(sp500_symbols, period="10y", group_by='ticker', auto_adjust=False)
-print(sp500_data.head())
+# Stack to pivot columns 
+long_format_data = data.stack(level=1).rename_axis(['Date', 'Ticker']).reset_index()
 
-# Save to CSV file
-sp500_data.to_csv("sp500_historical.csv")
+
+long_format_data.to_csv('sp500_historical.csv', index=False)
+
+print(long_format_data.head())
