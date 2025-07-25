@@ -1,16 +1,17 @@
 import yfinance as yf
 import pandas as pd 
 
-sp500 = "^GSPC"
-start_date = "2015-01-01"
-end_date = "2025-07-24"
+# Load from wikipedia
+wikipedia_link = "https://en.wikipedia.org/wiki/List_of_S%26P_500_companies"
+sp500 = pd.read_html(wikipedia_link)[0]
 
-sp500_data = yf.download(sp500, start=start_date, end=end_date)
+# Extract symols
+sp500_symbols = sp500["Symbol"].tolist()
+print(len(sp500_symbols))
 
-sp500_data.head()
+# Get from yfinance
+sp500_data = yf.download(sp500_symbols, period="10y", group_by='ticker', auto_adjust=False)
+print(sp500_data.head())
 
-# Convert to dataframe
-sp500_historical_df = pd.DataFrame(sp500_data)
-
-# Save to file
-sp500_historical_df.to_csv("sp500_historical.csv", index=False)
+# Save to CSV file
+sp500_data.to_csv("sp500_historical.csv")
