@@ -1,4 +1,5 @@
-'''
+Organizer for tasks
+
 Tasks for the week 1:
 1. Fetch S&P 500 tickers list (scrape or yfinance.Tickers).
 2. Pull 5–10 years of historical OHLCV data for all tickers.
@@ -10,5 +11,3 @@ Tasks for the week 1:
     - Seasonal patterns (monthly returns, volatility clusters).
 
 
-
-'''
